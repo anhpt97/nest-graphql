@@ -49,7 +49,7 @@ export const relay = async <Entity>(
       .getMany();
     if (nodes.length > first) {
       hasNextPage = true;
-      nodes = nodes.slice(0, first);
+      nodes.pop();
     }
   } else {
     if (before) {
@@ -63,7 +63,7 @@ export const relay = async <Entity>(
       .getMany();
     if (nodes.length > last) {
       hasPreviousPage = true;
-      nodes = nodes.slice(0, last);
+      nodes.pop();
     }
     nodes.reverse();
   }

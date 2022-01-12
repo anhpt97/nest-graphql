@@ -79,7 +79,7 @@ export class LocationService {
         .getMany();
       if (locations.length > first) {
         hasNextPage = true;
-        locations = locations.slice(0, first);
+        locations.pop();
       }
     } else {
       if (before) {
@@ -93,7 +93,7 @@ export class LocationService {
         .getMany();
       if (locations.length > last) {
         hasPreviousPage = true;
-        locations = locations.slice(0, last);
+        locations.pop();
       }
       locations.reverse();
     }
