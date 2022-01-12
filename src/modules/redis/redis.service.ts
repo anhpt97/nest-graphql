@@ -1,0 +1,31 @@
+import { REDIS_HOST, REDIS_PORT } from '@/common/constants';
+import { Injectable } from '@nestjs/common';
+import IORedis from 'ioredis';
+
+@Injectable()
+export class RedisService {
+  private redis: IORedis.Redis;
+
+  constructor() {
+    this.redis = new IORedis({
+      host: REDIS_HOST,
+      port: REDIS_PORT,
+    });
+  }
+
+  async set(key: string, value: string, time: number) {
+    await this.redis.set(key, value, 'EX', time);
+  }
+
+  async get(key: string) {
+    return await this.redis.get(key);
+  }
+
+  async del(key: string) {
+    await this.redis.del(key);
+  }
+
+  async ttl(key: string) {
+    return await this.redis.ttl(key);
+  }
+}
