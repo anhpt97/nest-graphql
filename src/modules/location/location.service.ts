@@ -40,6 +40,16 @@ export class LocationService {
   async getConnection(args: ConnectionArgs): Promise<LocationConnection> {
     // return relay(args, Location);
 
+    // return relay2(
+    //   args,
+    //   this.locationRepository
+    //     .createQueryBuilder('location')
+    //     .innerJoinAndSelect('location.user', 'user')
+    //     .where('location.name LIKE :name', {
+    //       name: `%${args.name}%`,
+    //     }),
+    // );
+
     const { first, after, last, before } = args;
 
     if ((!first && !last) || (first && last)) {
