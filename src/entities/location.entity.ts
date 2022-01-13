@@ -41,6 +41,10 @@ export class Location {
   @UpdatedAt()
   updatedAt: Date;
 
+  // @Field()
+  // @ForeignKeyColumn()
+  // userId: string;
+
   // @Field(() => User, { nullable: true })
   // @ManyToOne(() => User, {
   //   onDelete: 'CASCADE',
