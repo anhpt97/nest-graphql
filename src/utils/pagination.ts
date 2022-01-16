@@ -6,6 +6,12 @@ export const paginate = <Entity>(items: Entity[] = [], total = 0) => ({
   total,
 });
 
+export const encodeToCursor = (data: string) =>
+  Buffer.from(data).toString('base64');
+
+export const decodeCursor = (cursor: string) =>
+  Buffer.from(cursor, 'base64').toString();
+
 export const relay = async <Entity>(
   args: ConnectionArgs,
   Entity: EntityTarget<Entity>,
@@ -16,7 +22,7 @@ export const relay = async <Entity>(
     const nodes: any[] = await getRepository(Entity).find();
 
     const edges = nodes.map((node) => ({
-      cursor: node.id, // cursor: Buffer.from(node.id).toString('base64'),
+      cursor: node.id, // cursor: encodeToCursor(node.id),
       node: node,
     }));
 
@@ -40,7 +46,7 @@ export const relay = async <Entity>(
   if (first) {
     if (after) {
       qb.where('id > :after', {
-        after, // after: Buffer.from(after, 'base64').toString(),
+        after, // after: decodeCursor(after),
       });
     }
     nodes = await qb
@@ -54,7 +60,7 @@ export const relay = async <Entity>(
   } else {
     if (before) {
       qb.where('id < :before', {
-        before, // before: Buffer.from(before, 'base64').toString(),
+        before, // before: decodeCursor(before),
       });
     }
     nodes = await qb
@@ -69,7 +75,7 @@ export const relay = async <Entity>(
   }
 
   const edges = nodes.map((node) => ({
-    cursor: node.id, // cursor: Buffer.from(node.id).toString('base64'),
+    cursor: node.id, // cursor: encodeToCursor(node.id),
     node: node,
   }));
 
@@ -98,7 +104,7 @@ export const relay2 = async <Entity>(
     const nodes: any[] = await qb.getMany();
 
     const edges = nodes.map((node) => ({
-      cursor: node.id, // cursor: Buffer.from(node.id).toString('base64'),
+      cursor: node.id, // cursor: encodeToCursor(node.id),
       node: node,
     }));
 
@@ -123,7 +129,7 @@ export const relay2 = async <Entity>(
   if (first) {
     if (after) {
       qb.andWhere(`${tablePath}_id > :after`, {
-        after, // after: Buffer.from(after, 'base64').toString(),
+        after, // after: decodeCursor(after),
       });
     }
     nodes = await qb
@@ -137,7 +143,7 @@ export const relay2 = async <Entity>(
   } else {
     if (before) {
       qb.andWhere(`${tablePath}_id < :before`, {
-        before, // before: Buffer.from(before, 'base64').toString(),
+        before, // before: decodeCursor(before),
       });
     }
     nodes = await qb
@@ -152,7 +158,7 @@ export const relay2 = async <Entity>(
   }
 
   const edges = nodes.map((node) => ({
-    cursor: node.id, // cursor: Buffer.from(node.id).toString('base64'),
+    cursor: node.id, // cursor: encodeToCursor(node.id),
     node: node,
   }));
 

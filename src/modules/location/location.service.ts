@@ -56,7 +56,7 @@ export class LocationService {
       const locations = await this.locationRepository.find();
 
       const edges = locations.map((location) => ({
-        cursor: location.id, // cursor: Buffer.from(location.id).toString('base64'),
+        cursor: location.id, // cursor: encodeToCursor(node.id),
         node: location,
       }));
 
@@ -80,7 +80,7 @@ export class LocationService {
     if (first) {
       if (after) {
         qb.where('location.id > :after', {
-          after, // after: Buffer.from(after, 'base64').toString(),
+          after, // after: decodeCursor(after),
         });
       }
       locations = await qb
@@ -94,7 +94,7 @@ export class LocationService {
     } else {
       if (before) {
         qb.where('location.id < :before', {
-          before, // before: Buffer.from(before, 'base64').toString(),
+          before, // before: decodeCursor(before),
         });
       }
       locations = await qb
@@ -109,7 +109,7 @@ export class LocationService {
     }
 
     const edges = locations.map((location) => ({
-      cursor: location.id, // cursor: Buffer.from(location.id).toString('base64'),
+      cursor: location.id, // cursor: encodeToCursor(node.id),
       node: location,
     }));
 
