@@ -44,7 +44,7 @@ export const relay = async <Entity>(
       });
     }
     nodes = await qb
-      .limit(first + 1)
+      .take(first + 1)
       .orderBy('id', 'ASC')
       .getMany();
     if (nodes.length > first) {
@@ -58,7 +58,7 @@ export const relay = async <Entity>(
       });
     }
     nodes = await qb
-      .limit(last + 1)
+      .take(last + 1)
       .orderBy('id', 'DESC')
       .getMany();
     if (nodes.length > last) {
@@ -90,7 +90,6 @@ export const relay2 = async <Entity>(
   args: ConnectionArgs,
   qb: SelectQueryBuilder<Entity>,
 ) => {
-  const { tablePath } = qb.expressionMap.mainAlias;
   qb.skip().take().offset().limit().orderBy();
 
   const { first, after, last, before } = args;
@@ -119,6 +118,8 @@ export const relay2 = async <Entity>(
   let [nodes, hasPreviousPage, hasNextPage] = [[], false, false];
   const totalCount = await qb.clone().getCount();
 
+  const { tablePath } = qb.expressionMap.mainAlias;
+
   if (first) {
     if (after) {
       qb.andWhere(`${tablePath}_id > :after`, {
@@ -126,7 +127,7 @@ export const relay2 = async <Entity>(
       });
     }
     nodes = await qb
-      .limit(first + 1)
+      .take(first + 1)
       .orderBy(`${tablePath}_id`, 'ASC')
       .getMany();
     if (nodes.length > first) {
@@ -140,7 +141,7 @@ export const relay2 = async <Entity>(
       });
     }
     nodes = await qb
-      .limit(last + 1)
+      .take(last + 1)
       .orderBy(`${tablePath}_id`, 'DESC')
       .getMany();
     if (nodes.length > last) {

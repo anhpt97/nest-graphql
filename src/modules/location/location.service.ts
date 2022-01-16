@@ -84,7 +84,7 @@ export class LocationService {
         });
       }
       locations = await qb
-        .limit(first + 1)
+        .take(first + 1)
         .orderBy('location.id', 'ASC')
         .getMany();
       if (locations.length > first) {
@@ -98,7 +98,7 @@ export class LocationService {
         });
       }
       locations = await qb
-        .limit(last + 1)
+        .take(last + 1)
         .orderBy('location.id', 'DESC')
         .getMany();
       if (locations.length > last) {
