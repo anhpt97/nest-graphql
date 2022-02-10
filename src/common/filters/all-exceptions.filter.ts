@@ -1,9 +1,4 @@
-import {
-  ArgumentsHost,
-  Catch,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, HttpStatus } from '@nestjs/common';
 import {
   GqlArgumentsHost,
   GqlContextType,
@@ -11,7 +6,7 @@ import {
 } from '@nestjs/graphql';
 import sentry = require('@sentry/node');
 import { ExpressContext } from 'apollo-server-express';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { NODE_ENV, SENTRY_DSN } from '../constants';
 import { NodeEnv } from '../enums';
 
@@ -23,10 +18,7 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
 
   catch(exception: any, host: ArgumentsHost) {
     if (host.getType<GqlContextType>() === 'graphql') {
-      if (
-        !(exception instanceof HttpException) &&
-        [NodeEnv.DEVELOPMENT, NodeEnv.PRODUCTION].includes(NODE_ENV)
-      ) {
+      if ([NodeEnv.DEVELOPMENT, NodeEnv.PRODUCTION].includes(NODE_ENV)) {
         const ctx = GqlArgumentsHost.create(host).getContext<ExpressContext>();
         sentry.addBreadcrumb({
           message: JSON.stringify(exception),
@@ -42,14 +34,34 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
     }
 
     const ctx = host.switchToHttp();
+    const req = ctx.getRequest<Request>();
     const res = ctx.getResponse<Response>();
 
-    if (exception instanceof HttpException) {
-      res.status(exception.getStatus()).json(exception.getResponse());
-    } else {
+    if ([NodeEnv.DEVELOPMENT, NodeEnv.PRODUCTION].includes(NODE_ENV)) {
+      const { body, headers, ip, method, originalUrl, params, query, user } =
+        req;
+      sentry.addBreadcrumb({
+        message: JSON.stringify(exception),
+        data: {
+          authorization: headers.authorization,
+          body,
+          ip,
+          method,
+          params,
+          query,
+          url: headers.origin + originalUrl,
+          user,
+        },
+      });
+      sentry.captureException(exception);
+    }
+
+    if (NODE_ENV !== NodeEnv.PRODUCTION) {
       res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ message: exception.message, ...exception });
+    } else {
+      res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
