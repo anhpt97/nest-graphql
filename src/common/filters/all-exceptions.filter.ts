@@ -45,6 +45,7 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
     if ([NodeEnv.DEVELOPMENT, NodeEnv.PRODUCTION].includes(NODE_ENV)) {
       const { body, headers, ip, method, originalUrl, params, query, user } =
         req;
+      sentry.setExtra('body', body);
       sentry.addBreadcrumb({
         message: JSON.stringify(exception),
         data: {
