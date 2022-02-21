@@ -1,15 +1,15 @@
-import { GqlModuleOptions } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLError } from 'graphql';
 import { IncomingHttpHeaders } from 'http';
 import { NODE_ENV } from './common/constants';
 import { ErrorMessage, NodeEnv } from './common/enums';
 import { ComplexityPlugin } from './common/graphql/plugins';
 
-const gqlconfig: GqlModuleOptions = {
-  // cors: true,
-  fieldResolverEnhancers: ['guards', 'interceptors', 'filters'],
+const gqlconfig: ApolloDriverConfig = {
+  driver: ApolloDriver,
   autoSchemaFile: true,
-  plugins: [new ComplexityPlugin(100)],
+  fieldResolverEnhancers: ['guards', 'interceptors', 'filters'],
+  // cors: true,
   subscriptions: {
     'subscriptions-transport-ws': {
       onConnect: (headers: IncomingHttpHeaders) => {
@@ -24,8 +24,9 @@ const gqlconfig: GqlModuleOptions = {
       },
     },
   },
-  introspection: NODE_ENV !== NodeEnv.PRODUCTION,
   playground: NODE_ENV !== NodeEnv.PRODUCTION,
+  introspection: NODE_ENV !== NodeEnv.PRODUCTION,
+  plugins: [new ComplexityPlugin(100)],
   formatError: (error: GraphQLError) => {
     if (NODE_ENV === NodeEnv.PRODUCTION) {
       delete error.extensions.exception;
