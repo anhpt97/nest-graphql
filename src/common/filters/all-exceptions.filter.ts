@@ -20,11 +20,16 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
     if (host.getType<GqlContextType>() === 'graphql') {
       if ([NodeEnv.DEVELOPMENT, NodeEnv.PRODUCTION].includes(NODE_ENV)) {
         const ctx = GqlArgumentsHost.create(host).getContext<ExpressContext>();
+        sentry.setExtra('query', ctx.req.body.query);
+        sentry.setExtra('variables', ctx.req.body.variables);
         sentry.addBreadcrumb({
           message: JSON.stringify(exception),
           data: {
             authorization: ctx.req.headers.authorization,
-            operation: ctx.req.body.query.replace(/\n\s*/g, ' ').trim(),
+            body: {
+              query: ctx.req.body.query,
+              variables: JSON.stringify(ctx.req.body.variables),
+            },
             user: ctx.req.user,
           },
         });
