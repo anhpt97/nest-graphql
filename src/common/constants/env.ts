@@ -14,7 +14,8 @@ export const DB_NAME = process.env.DB_NAME;
 export const DB_SYNC = process.env.DB_SYNC;
 
 export const JWT_SECRET = process.env.JWT_SECRET;
-export const JWT_EXPIRES_IN = Number(process.env.JWT_EXPIRES_IN);
+export const JWT_EXPIRES_IN =
+  Number(process.env.JWT_EXPIRES_IN) || process.env.JWT_EXPIRES_IN;
 
 export const REDIS_HOST = process.env.REDIS_HOST;
 export const REDIS_PORT = Number(process.env.REDIS_PORT);
