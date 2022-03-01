@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { getRepository } from 'typeorm';
 import { Seeder } from 'typeorm-seeding';
 
-export default class CreateUser implements Seeder {
+export default class CreateUsers implements Seeder {
   async run() {
     const user = await getRepository(User).findOne({
       id: '1000000000000000000',
