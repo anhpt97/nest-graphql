@@ -17,12 +17,12 @@ const ormconfig: TypeOrmModuleOptions = {
   username: DB_USERNAME,
   password: DB_PASSWORD,
   database: DB_NAME,
+  autoLoadEntities: true,
   synchronize: DB_SYNC === 'true',
   logging: true,
   logger: [NodeEnv.DEVELOPMENT, NodeEnv.PRODUCTION].includes(NODE_ENV)
     ? 'simple-console'
     : 'advanced-console',
-  entities: [__dirname + '/**/*.entity{.ts,.js}'],
   migrationsTableName: 'migration',
   migrations: [__dirname + '/migrations/*{.ts,.js}'],
   cli: {
