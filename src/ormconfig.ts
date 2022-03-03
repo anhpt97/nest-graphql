@@ -17,7 +17,7 @@ const ormconfig: TypeOrmModuleOptions = {
   username: DB_USERNAME,
   password: DB_PASSWORD,
   database: DB_NAME,
-  autoLoadEntities: true,
+  entities: [__dirname + '/**/*.entity{.ts,.js}'],
   synchronize: DB_SYNC === 'true',
   logging: true,
   logger: [NodeEnv.DEVELOPMENT, NodeEnv.PRODUCTION].includes(NODE_ENV)
