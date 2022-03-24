@@ -1,4 +1,8 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import {
+  ApolloServerPluginLandingPageDisabled,
+  ApolloServerPluginLandingPageLocalDefault,
+} from 'apollo-server-core';
 import { GraphQLError } from 'graphql';
 import { IncomingHttpHeaders } from 'http';
 import { NODE_ENV } from './common/constants';
@@ -24,9 +28,14 @@ const gqlconfig: ApolloDriverConfig = {
       },
     },
   },
-  playground: NODE_ENV !== NodeEnv.PRODUCTION,
+  playground: false,
   introspection: NODE_ENV !== NodeEnv.PRODUCTION,
-  plugins: [new ComplexityPlugin(100)],
+  plugins: [
+    NODE_ENV !== NodeEnv.PRODUCTION
+      ? ApolloServerPluginLandingPageLocalDefault()
+      : ApolloServerPluginLandingPageDisabled(),
+    new ComplexityPlugin(100),
+  ],
   formatError: (error: GraphQLError) => {
     if (NODE_ENV === NodeEnv.PRODUCTION) {
       delete error.extensions.exception;
