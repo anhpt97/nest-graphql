@@ -2,14 +2,11 @@ import { LocationRepository, UserRepository } from '@/repositories';
 import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-const repository = TypeOrmModule.forFeature([
-  LocationRepository,
-  UserRepository,
-]);
+const database = TypeOrmModule.forFeature([LocationRepository, UserRepository]);
 
 @Global()
 @Module({
-  providers: repository.providers,
-  exports: repository.exports,
+  providers: database.providers,
+  exports: database.exports,
 })
-export class RepositoryModule {}
+export class DatabaseModule {}

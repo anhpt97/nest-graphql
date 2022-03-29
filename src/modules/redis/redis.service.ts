@@ -1,13 +1,13 @@
 import { REDIS_HOST, REDIS_PORT } from '@/common/constants';
 import { Injectable } from '@nestjs/common';
-import IORedis from 'ioredis';
+import Redis from 'ioredis';
 
 @Injectable()
 export class RedisService {
-  private redis: IORedis.Redis;
+  private redis: Redis;
 
   constructor() {
-    this.redis = new IORedis({
+    this.redis = new Redis({
       host: REDIS_HOST,
       port: REDIS_PORT,
     });
