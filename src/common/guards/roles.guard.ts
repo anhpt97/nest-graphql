@@ -22,9 +22,6 @@ export class RolesGuard implements CanActivate {
         context.getHandler(),
         context.getClass(),
       ]) || [];
-    if (!roles.length) {
-      throw new ForbiddenException(ErrorMessage.PERMISSION_DENIED);
-    }
 
     if (context.getType<GqlContextType>() === 'graphql') {
       const ctx =
