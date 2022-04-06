@@ -11,6 +11,7 @@ import { ComplexityPlugin } from './common/graphql/plugins';
 
 const gqlconfig: ApolloDriverConfig = {
   driver: ApolloDriver,
+  fieldResolverEnhancers: ['guards'],
   autoSchemaFile: true,
   // cors: true,
   subscriptions: {
