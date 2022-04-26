@@ -19,20 +19,17 @@ export const relay = async <Entity>(
   const { first, after, last, before } = args;
 
   if ((!first && !last) || (first && last)) {
-    const [nodes, totalCount] = await getRepository(Entity).findAndCount();
+    const nodes: any[] = await getRepository(Entity).find();
 
-    const edges = nodes.map((node: any) => ({
+    const edges = nodes.map((node) => ({
       cursor: node.id, // cursor: encodeToCursor(node.id),
-      node,
+      node: node,
     }));
 
     return {
-      edges: nodes.map((node: any) => ({
-        cursor: node.id, // cursor: encodeToCursor(node.id),
-        node,
-      })),
-      nodes,
-      totalCount,
+      edges,
+      nodes: nodes,
+      totalCount: nodes.length,
       pageInfo: {
         startCursor: edges[0]?.cursor,
         endCursor: edges[edges.length - 1]?.cursor,
@@ -42,8 +39,9 @@ export const relay = async <Entity>(
     };
   }
 
-  let [nodes, totalCount, hasPreviousPage, hasNextPage] = [[], 0, false, false];
+  let [nodes, hasPreviousPage, hasNextPage] = [[], false, false];
   const qb = getRepository(Entity).createQueryBuilder();
+  const totalCount = await qb.clone().getCount();
 
   if (first) {
     if (after) {
@@ -51,10 +49,10 @@ export const relay = async <Entity>(
         after, // after: decodeCursor(after),
       });
     }
-    [nodes, totalCount] = await qb
+    nodes = await qb
       .take(first + 1)
       .orderBy('id', 'ASC')
-      .getManyAndCount();
+      .getMany();
     if (nodes.length > first) {
       hasNextPage = true;
       nodes.pop();
@@ -65,10 +63,10 @@ export const relay = async <Entity>(
         before, // before: decodeCursor(before),
       });
     }
-    [nodes, totalCount] = await qb
+    nodes = await qb
       .take(last + 1)
       .orderBy('id', 'DESC')
-      .getManyAndCount();
+      .getMany();
     if (nodes.length > last) {
       hasPreviousPage = true;
       nodes.pop();
@@ -78,12 +76,12 @@ export const relay = async <Entity>(
 
   const edges = nodes.map((node) => ({
     cursor: node.id, // cursor: encodeToCursor(node.id),
-    node,
+    node: node,
   }));
 
   return {
     edges,
-    nodes,
+    nodes: nodes,
     totalCount,
     pageInfo: {
       startCursor: edges[0]?.cursor,
@@ -103,17 +101,17 @@ export const relay2 = async <Entity>(
   const { first, after, last, before } = args;
 
   if ((!first && !last) || (first && last)) {
-    const [nodes, totalCount] = await qb.getManyAndCount();
+    const nodes: any[] = await qb.getMany();
 
-    const edges = nodes.map((node: any) => ({
+    const edges = nodes.map((node) => ({
       cursor: node.id, // cursor: encodeToCursor(node.id),
-      node,
+      node: node,
     }));
 
     return {
       edges,
-      nodes,
-      totalCount,
+      nodes: nodes,
+      totalCount: nodes.length,
       pageInfo: {
         startCursor: edges[0]?.cursor,
         endCursor: edges[edges.length - 1]?.cursor,
@@ -123,7 +121,8 @@ export const relay2 = async <Entity>(
     };
   }
 
-  let [nodes, totalCount, hasPreviousPage, hasNextPage] = [[], 0, false, false];
+  let [nodes, hasPreviousPage, hasNextPage] = [[], false, false];
+  const totalCount = await qb.clone().getCount();
 
   const { tablePath } = qb.expressionMap.mainAlias;
 
@@ -133,10 +132,10 @@ export const relay2 = async <Entity>(
         after, // after: decodeCursor(after),
       });
     }
-    [nodes, totalCount] = await qb
+    nodes = await qb
       .take(first + 1)
       .orderBy(`${tablePath}_id`, 'ASC')
-      .getManyAndCount();
+      .getMany();
     if (nodes.length > first) {
       hasNextPage = true;
       nodes.pop();
@@ -147,10 +146,10 @@ export const relay2 = async <Entity>(
         before, // before: decodeCursor(before),
       });
     }
-    [nodes, totalCount] = await qb
+    nodes = await qb
       .take(last + 1)
       .orderBy(`${tablePath}_id`, 'DESC')
-      .getManyAndCount();
+      .getMany();
     if (nodes.length > last) {
       hasPreviousPage = true;
       nodes.pop();
@@ -160,12 +159,12 @@ export const relay2 = async <Entity>(
 
   const edges = nodes.map((node) => ({
     cursor: node.id, // cursor: encodeToCursor(node.id),
-    node,
+    node: node,
   }));
 
   return {
     edges,
-    nodes,
+    nodes: nodes,
     totalCount,
     pageInfo: {
       startCursor: edges[0]?.cursor,

@@ -53,8 +53,7 @@ export class LocationService {
     const { first, after, last, before } = args;
 
     if ((!first && !last) || (first && last)) {
-      const [locations, totalCount] =
-        await this.locationRepository.findAndCount();
+      const locations = await this.locationRepository.find();
 
       const edges = locations.map((location) => ({
         cursor: location.id, // cursor: encodeToCursor(node.id),
@@ -64,7 +63,7 @@ export class LocationService {
       return {
         edges,
         nodes: locations,
-        totalCount,
+        totalCount: locations.length,
         pageInfo: {
           startCursor: edges[0]?.cursor,
           endCursor: edges[edges.length - 1]?.cursor,
