@@ -1,11 +1,11 @@
-import { ErrorMessage, Message } from '@/common/enums';
-import { UserRepository } from '@/repositories';
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import bcrypt from 'bcrypt';
+import { ErrorMessage, Message } from '~/common/enums';
+import { UserRepository } from '~/repositories';
 
 @Injectable()
 export class MeService {

@@ -1,6 +1,6 @@
-import { Location } from '@/entities';
 import { DeepPartial, getRepository } from 'typeorm';
 import { Seeder } from 'typeorm-seeding';
+import { Location } from '~/entities';
 
 export default class CreateLocations implements Seeder {
   async run() {

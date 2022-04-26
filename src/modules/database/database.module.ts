@@ -1,6 +1,6 @@
-import { LocationRepository, UserRepository } from '@/repositories';
 import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { LocationRepository, UserRepository } from '~/repositories';
 
 const database = TypeOrmModule.forFeature([LocationRepository, UserRepository]);
 

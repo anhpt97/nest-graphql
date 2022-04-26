@@ -1,4 +1,6 @@
-import { generateId } from '@/common/graphql/utils';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { BeforeInsert, Entity, Index } from 'typeorm';
+import { generateId } from '~/common/graphql/utils';
 import {
   ColumnDecimal,
   ColumnText,
@@ -6,9 +8,7 @@ import {
   CreatedAt,
   PrimaryKeyColumn,
   UpdatedAt,
-} from '@/utils';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { BeforeInsert, Entity, Index } from 'typeorm';
+} from '~/utils';
 
 @ObjectType()
 @Entity('location')

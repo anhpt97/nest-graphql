@@ -1,7 +1,3 @@
-import { ErrorMessage, UserStatus } from '@/common/enums';
-import { IUser } from '@/common/interfaces';
-import { User } from '@/entities';
-import { UserRepository } from '@/repositories';
 import {
   BadRequestException,
   ForbiddenException,
@@ -10,6 +6,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import bcrypt from 'bcrypt';
+import { ErrorMessage, UserStatus } from '~/common/enums';
+import { IUser } from '~/common/interfaces';
+import { User } from '~/entities';
+import { UserRepository } from '~/repositories';
 import { TokenService } from './token.service';
 
 @Injectable()

@@ -1,7 +1,7 @@
-import { Trim } from '@/utils';
 import { Field, InputType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
+import { Trim } from '~/utils';
 
 export class LoginBody {
   @IsString()

@@ -1,6 +1,6 @@
-import { Connection, Paginated } from '@/common/graphql/utils';
-import { Location } from '@/entities';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Connection, Paginated } from '~/common/graphql/utils';
+import { Location } from '~/entities';
 
 @ObjectType()
 export class Coordinates {

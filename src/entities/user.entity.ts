@@ -1,14 +1,14 @@
-import { UserRole, UserStatus } from '@/common/enums';
-import { generateId } from '@/common/graphql/utils';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { BeforeInsert, Entity, Index } from 'typeorm';
+import { UserRole, UserStatus } from '~/common/enums';
+import { generateId } from '~/common/graphql/utils';
 import {
   ColumnEnum,
   ColumnVarChar,
   CreatedAt,
   PrimaryKeyColumn,
   UpdatedAt,
-} from '@/utils';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { BeforeInsert, Entity, Index } from 'typeorm';
+} from '~/utils';
 
 @ObjectType()
 @Entity('user')

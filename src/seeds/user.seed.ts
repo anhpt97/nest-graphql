@@ -1,8 +1,8 @@
-import { UserRole, UserStatus } from '@/common/enums';
-import { User } from '@/entities';
 import bcrypt from 'bcrypt';
 import { getRepository } from 'typeorm';
 import { Seeder } from 'typeorm-seeding';
+import { UserRole, UserStatus } from '~/common/enums';
+import { User } from '~/entities';
 
 export default class CreateUsers implements Seeder {
   async run() {

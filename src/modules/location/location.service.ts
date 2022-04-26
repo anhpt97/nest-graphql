@@ -1,14 +1,14 @@
-import { ConnectionArgs } from '@/common/dto';
-import { ErrorMessage } from '@/common/enums';
-import { Location } from '@/entities';
-import { LocationRepository } from '@/repositories';
-import { paginate } from '@/utils';
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { QueryError } from 'mysql2';
+import { ConnectionArgs } from '~/common/dto';
+import { ErrorMessage } from '~/common/enums';
+import { Location } from '~/entities';
+import { LocationRepository } from '~/repositories';
+import { paginate } from '~/utils';
 import { LocationArgs, LocationInput } from './location.dto';
 import { LocationConnection, PaginatedLocation } from './location.model';
 

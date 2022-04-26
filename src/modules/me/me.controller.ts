@@ -1,8 +1,8 @@
-import { CurrentUser } from '@/common/decorators';
-import { JwtAuthGuard } from '@/common/guards';
-import { IUser } from '@/common/interfaces';
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CurrentUser } from '~/common/decorators';
+import { JwtAuthGuard } from '~/common/guards';
+import { IUser } from '~/common/interfaces';
 import { ChangePasswordBody } from './me.dto';
 import { MeService } from './me.service';
 

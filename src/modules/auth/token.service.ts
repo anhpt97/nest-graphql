@@ -1,9 +1,9 @@
-import { REFRESH_TOKEN_TTL } from '@/common/constants';
-import { ErrorMessage } from '@/common/enums';
-import { IUser } from '@/common/interfaces';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'crypto';
+import { REFRESH_TOKEN_TTL } from '~/common/constants';
+import { ErrorMessage } from '~/common/enums';
+import { IUser } from '~/common/interfaces';
 import { RedisService } from '../redis/redis.service';
 
 @Injectable()

@@ -1,5 +1,5 @@
-import { ConnectionArgs } from '@/common/dto';
 import { EntityTarget, getRepository, SelectQueryBuilder } from 'typeorm';
+import { ConnectionArgs } from '~/common/dto';
 
 export const paginate = <Entity>(items: Entity[] = [], total = 0) => ({
   items,
@@ -23,12 +23,12 @@ export const relay = async <Entity>(
 
     const edges = nodes.map((node) => ({
       cursor: node.id, // cursor: encodeToCursor(node.id),
-      node: node,
+      node,
     }));
 
     return {
       edges,
-      nodes: nodes,
+      nodes,
       totalCount: nodes.length,
       pageInfo: {
         startCursor: edges[0]?.cursor,
@@ -76,12 +76,12 @@ export const relay = async <Entity>(
 
   const edges = nodes.map((node) => ({
     cursor: node.id, // cursor: encodeToCursor(node.id),
-    node: node,
+    node,
   }));
 
   return {
     edges,
-    nodes: nodes,
+    nodes,
     totalCount,
     pageInfo: {
       startCursor: edges[0]?.cursor,
@@ -105,12 +105,12 @@ export const relay2 = async <Entity>(
 
     const edges = nodes.map((node) => ({
       cursor: node.id, // cursor: encodeToCursor(node.id),
-      node: node,
+      node,
     }));
 
     return {
       edges,
-      nodes: nodes,
+      nodes,
       totalCount: nodes.length,
       pageInfo: {
         startCursor: edges[0]?.cursor,
@@ -159,12 +159,12 @@ export const relay2 = async <Entity>(
 
   const edges = nodes.map((node) => ({
     cursor: node.id, // cursor: encodeToCursor(node.id),
-    node: node,
+    node,
   }));
 
   return {
     edges,
-    nodes: nodes,
+    nodes,
     totalCount,
     pageInfo: {
       startCursor: edges[0]?.cursor,

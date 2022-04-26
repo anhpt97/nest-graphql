@@ -1,4 +1,3 @@
-import { UserRepository } from '@/repositories';
 import {
   ForbiddenException,
   Injectable,
@@ -7,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { UserRepository } from '~/repositories';
 import { JWT_SECRET } from '../constants';
 import { ErrorMessage, UserStatus } from '../enums';
 import { IUser } from '../interfaces';

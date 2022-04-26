@@ -1,9 +1,9 @@
-import { Topic } from '@/common/enums';
-import { pubSub } from '@/common/graphql/utils';
-import { User } from '@/entities';
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { DeepPartial } from 'typeorm';
+import { Topic } from '~/common/enums';
+import { pubSub } from '~/common/graphql/utils';
+import { User } from '~/entities';
 
 @Injectable()
 export class CronService {

@@ -1,7 +1,7 @@
-import { PaginationArgs } from '@/common/dto';
-import { Trim } from '@/utils';
 import { ArgsType, Field, InputType } from '@nestjs/graphql';
 import { IsNotEmpty, IsOptional, IsUrl, Max, Min } from 'class-validator';
+import { PaginationArgs } from '~/common/dto';
+import { Trim } from '~/utils';
 
 @ArgsType()
 export class LocationArgs extends PaginationArgs {

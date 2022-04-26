@@ -1,6 +1,6 @@
-import { isPassword, Trim } from '@/utils';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, Validate } from 'class-validator';
+import { isPassword, Trim } from '~/utils';
 
 export class ChangePasswordBody {
   @IsString()
