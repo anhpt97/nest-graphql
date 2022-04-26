@@ -19,17 +19,20 @@ export const relay = async <Entity>(
   const { first, after, last, before } = args;
 
   if ((!first && !last) || (first && last)) {
-    const nodes: any[] = await getRepository(Entity).find();
+    const [nodes, totalCount] = await getRepository(Entity).findAndCount();
 
-    const edges = nodes.map((node) => ({
+    const edges = nodes.map((node: any) => ({
       cursor: node.id, // cursor: encodeToCursor(node.id),
       node,
     }));
 
     return {
-      edges,
+      edges: nodes.map((node: any) => ({
+        cursor: node.id, // cursor: encodeToCursor(node.id),
+        node,
+      })),
       nodes,
-      totalCount: nodes.length,
+      totalCount,
       pageInfo: {
         startCursor: edges[0]?.cursor,
         endCursor: edges[edges.length - 1]?.cursor,
@@ -39,9 +42,8 @@ export const relay = async <Entity>(
     };
   }
 
-  let [nodes, hasPreviousPage, hasNextPage] = [[], false, false];
+  let [nodes, totalCount, hasPreviousPage, hasNextPage] = [[], 0, false, false];
   const qb = getRepository(Entity).createQueryBuilder();
-  const totalCount = await qb.clone().getCount();
 
   if (first) {
     if (after) {
@@ -49,10 +51,10 @@ export const relay = async <Entity>(
         after, // after: decodeCursor(after),
       });
     }
-    nodes = await qb
+    [nodes, totalCount] = await qb
       .take(first + 1)
       .orderBy('id', 'ASC')
-      .getMany();
+      .getManyAndCount();
     if (nodes.length > first) {
       hasNextPage = true;
       nodes.pop();
@@ -63,10 +65,10 @@ export const relay = async <Entity>(
         before, // before: decodeCursor(before),
       });
     }
-    nodes = await qb
+    [nodes, totalCount] = await qb
       .take(last + 1)
       .orderBy('id', 'DESC')
-      .getMany();
+      .getManyAndCount();
     if (nodes.length > last) {
       hasPreviousPage = true;
       nodes.pop();
@@ -101,9 +103,9 @@ export const relay2 = async <Entity>(
   const { first, after, last, before } = args;
 
   if ((!first && !last) || (first && last)) {
-    const nodes: any[] = await qb.getMany();
+    const [nodes, totalCount] = await qb.getManyAndCount();
 
-    const edges = nodes.map((node) => ({
+    const edges = nodes.map((node: any) => ({
       cursor: node.id, // cursor: encodeToCursor(node.id),
       node,
     }));
@@ -111,7 +113,7 @@ export const relay2 = async <Entity>(
     return {
       edges,
       nodes,
-      totalCount: nodes.length,
+      totalCount,
       pageInfo: {
         startCursor: edges[0]?.cursor,
         endCursor: edges[edges.length - 1]?.cursor,
@@ -121,8 +123,7 @@ export const relay2 = async <Entity>(
     };
   }
 
-  let [nodes, hasPreviousPage, hasNextPage] = [[], false, false];
-  const totalCount = await qb.clone().getCount();
+  let [nodes, totalCount, hasPreviousPage, hasNextPage] = [[], 0, false, false];
 
   const { tablePath } = qb.expressionMap.mainAlias;
 
@@ -132,10 +133,10 @@ export const relay2 = async <Entity>(
         after, // after: decodeCursor(after),
       });
     }
-    nodes = await qb
+    [nodes, totalCount] = await qb
       .take(first + 1)
       .orderBy(`${tablePath}_id`, 'ASC')
-      .getMany();
+      .getManyAndCount();
     if (nodes.length > first) {
       hasNextPage = true;
       nodes.pop();
@@ -146,10 +147,10 @@ export const relay2 = async <Entity>(
         before, // before: decodeCursor(before),
       });
     }
-    nodes = await qb
+    [nodes, totalCount] = await qb
       .take(last + 1)
       .orderBy(`${tablePath}_id`, 'DESC')
-      .getMany();
+      .getManyAndCount();
     if (nodes.length > last) {
       hasPreviousPage = true;
       nodes.pop();
