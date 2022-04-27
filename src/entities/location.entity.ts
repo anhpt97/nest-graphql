@@ -35,20 +35,21 @@ export class Location {
   @ColumnDecimal({ precision: 11, scale: 8 })
   lng: number;
 
-  @CreatedAt()
+  @CreatedAt({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdatedAt()
+  @UpdatedAt({ name: 'updated_at' })
   updatedAt: Date;
 
   // @Field()
-  // @ForeignKeyColumn()
+  // @ForeignKeyColumn({ name: 'user_id' })
   // userId: string;
 
   // @Field(() => User, { nullable: true })
   // @ManyToOne(() => User, {
   //   onDelete: 'CASCADE',
   // })
+  // @JoinColumn({ name: 'user_id' })
   // user: User;
 
   @BeforeInsert()

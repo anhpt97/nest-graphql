@@ -32,6 +32,7 @@ export class User {
   @ColumnVarChar({
     length: 64,
     select: false,
+    name: 'password_hash',
   })
   passwordHash: string;
 
@@ -48,10 +49,10 @@ export class User {
   status: UserStatus;
 
   @Field({ nullable: true })
-  @CreatedAt()
+  @CreatedAt({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdatedAt()
+  @UpdatedAt({ name: 'updated_at' })
   updatedAt: Date;
 
   @BeforeInsert()
