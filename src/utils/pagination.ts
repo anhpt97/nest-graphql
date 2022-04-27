@@ -28,7 +28,7 @@ export const relay = async <Entity>(
 
     return {
       edges,
-      nodes: nodes,
+      nodes,
       totalCount: nodes.length,
       pageInfo: {
         startCursor: edges[0]?.cursor,
@@ -48,6 +48,7 @@ export const relay = async <Entity>(
       qb.where('id > :after', {
         after, // after: decodeCursor(after),
       });
+      hasPreviousPage = true;
     }
     [nodes, totalCount] = await Promise.all([
       qb
@@ -60,11 +61,14 @@ export const relay = async <Entity>(
       hasNextPage = true;
       nodes.pop();
     }
-  } else {
+  }
+
+  if (last) {
     if (before) {
       qb.where('id < :before', {
         before, // before: decodeCursor(before),
       });
+      hasNextPage = true;
     }
     [nodes, totalCount] = await Promise.all([
       qb
@@ -87,7 +91,7 @@ export const relay = async <Entity>(
 
   return {
     edges,
-    nodes: nodes,
+    nodes,
     totalCount,
     pageInfo: {
       startCursor: edges[0]?.cursor,
@@ -116,7 +120,7 @@ export const relay2 = async <Entity>(
 
     return {
       edges,
-      nodes: nodes,
+      nodes,
       totalCount: nodes.length,
       pageInfo: {
         startCursor: edges[0]?.cursor,
@@ -137,6 +141,7 @@ export const relay2 = async <Entity>(
       qb.andWhere(`${tablePath}.id > :after`, {
         after, // after: decodeCursor(after),
       });
+      hasPreviousPage = true;
     }
     [nodes, totalCount] = await Promise.all([
       qb
@@ -149,11 +154,14 @@ export const relay2 = async <Entity>(
       hasNextPage = true;
       nodes.pop();
     }
-  } else {
+  }
+
+  if (last) {
     if (before) {
       qb.andWhere(`${tablePath}.id < :before`, {
         before, // before: decodeCursor(before),
       });
+      hasNextPage = true;
     }
     [nodes, totalCount] = await Promise.all([
       qb
@@ -176,7 +184,7 @@ export const relay2 = async <Entity>(
 
   return {
     edges,
-    nodes: nodes,
+    nodes,
     totalCount,
     pageInfo: {
       startCursor: edges[0]?.cursor,

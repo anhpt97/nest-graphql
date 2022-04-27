@@ -44,9 +44,9 @@ export class LocationService {
     //   args,
     //   this.locationRepository
     //     .createQueryBuilder('location')
-    //     // .innerJoinAndSelect('location.user', 'user')
+    //     .innerJoinAndSelect('location.user', 'user')
     //     .where('location.name LIKE :name', {
-    //       name: `%${'H'}%`,
+    //       name: `%${args.name}%`,
     //     }),
     // );
 
@@ -87,6 +87,7 @@ export class LocationService {
         qb.where('location.id > :after', {
           after, // after: decodeCursor(after),
         });
+        hasPreviousPage = true;
       }
       [locations, totalCount] = await Promise.all([
         qb
@@ -99,11 +100,14 @@ export class LocationService {
         hasNextPage = true;
         locations.pop();
       }
-    } else {
+    }
+
+    if (last) {
       if (before) {
         qb.where('location.id < :before', {
           before, // before: decodeCursor(before),
         });
+        hasNextPage = true;
       }
       [locations, totalCount] = await Promise.all([
         qb
