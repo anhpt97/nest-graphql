@@ -39,9 +39,9 @@ export const relay = async <Entity>(
     };
   }
 
-  let [nodes, hasPreviousPage, hasNextPage] = [[], false, false];
+  let [nodes, totalCount, hasPreviousPage, hasNextPage] = [[], 0, false, false];
   const qb = getRepository(Entity).createQueryBuilder();
-  const totalCount = await qb.clone().getCount();
+  const qb2 = qb.clone();
 
   if (first) {
     if (after) {
@@ -49,10 +49,13 @@ export const relay = async <Entity>(
         after, // after: decodeCursor(after),
       });
     }
-    nodes = await qb
-      .take(first + 1)
-      .orderBy('id', 'ASC')
-      .getMany();
+    [nodes, totalCount] = await Promise.all([
+      qb
+        .take(first + 1)
+        .orderBy('id', 'ASC')
+        .getMany(),
+      qb2.getCount(),
+    ]);
     if (nodes.length > first) {
       hasNextPage = true;
       nodes.pop();
@@ -63,10 +66,13 @@ export const relay = async <Entity>(
         before, // before: decodeCursor(before),
       });
     }
-    nodes = await qb
-      .take(last + 1)
-      .orderBy('id', 'DESC')
-      .getMany();
+    [nodes, totalCount] = await Promise.all([
+      qb
+        .take(last + 1)
+        .orderBy('id', 'DESC')
+        .getMany(),
+      qb2.getCount(),
+    ]);
     if (nodes.length > last) {
       hasPreviousPage = true;
       nodes.pop();
@@ -121,35 +127,41 @@ export const relay2 = async <Entity>(
     };
   }
 
-  let [nodes, hasPreviousPage, hasNextPage] = [[], false, false];
-  const totalCount = await qb.clone().getCount();
+  let [nodes, totalCount, hasPreviousPage, hasNextPage] = [[], 0, false, false];
+  const qb2 = qb.clone();
 
   const { tablePath } = qb.expressionMap.mainAlias;
 
   if (first) {
     if (after) {
-      qb.andWhere(`${tablePath}_id > :after`, {
+      qb.andWhere(`${tablePath}.id > :after`, {
         after, // after: decodeCursor(after),
       });
     }
-    nodes = await qb
-      .take(first + 1)
-      .orderBy(`${tablePath}_id`, 'ASC')
-      .getMany();
+    [nodes, totalCount] = await Promise.all([
+      qb
+        .take(first + 1)
+        .orderBy(`${tablePath}.id`, 'ASC')
+        .getMany(),
+      qb2.getCount(),
+    ]);
     if (nodes.length > first) {
       hasNextPage = true;
       nodes.pop();
     }
   } else {
     if (before) {
-      qb.andWhere(`${tablePath}_id < :before`, {
+      qb.andWhere(`${tablePath}.id < :before`, {
         before, // before: decodeCursor(before),
       });
     }
-    nodes = await qb
-      .take(last + 1)
-      .orderBy(`${tablePath}_id`, 'DESC')
-      .getMany();
+    [nodes, totalCount] = await Promise.all([
+      qb
+        .take(last + 1)
+        .orderBy(`${tablePath}.id`, 'DESC')
+        .getMany(),
+      qb2.getCount(),
+    ]);
     if (nodes.length > last) {
       hasPreviousPage = true;
       nodes.pop();

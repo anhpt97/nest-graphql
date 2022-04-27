@@ -44,9 +44,9 @@ export class LocationService {
     //   args,
     //   this.locationRepository
     //     .createQueryBuilder('location')
-    //     .innerJoinAndSelect('location.user', 'user')
+    //     // .innerJoinAndSelect('location.user', 'user')
     //     .where('location.name LIKE :name', {
-    //       name: `%${args.name}%`,
+    //       name: `%${'H'}%`,
     //     }),
     // );
 
@@ -73,9 +73,14 @@ export class LocationService {
       };
     }
 
-    let [locations, hasPreviousPage, hasNextPage] = [[], false, false];
+    let [locations, totalCount, hasPreviousPage, hasNextPage] = [
+      [],
+      0,
+      false,
+      false,
+    ];
     const qb = this.locationRepository.createQueryBuilder('location');
-    const totalCount = await qb.clone().getCount();
+    const qb2 = qb.clone();
 
     if (first) {
       if (after) {
@@ -83,10 +88,13 @@ export class LocationService {
           after, // after: decodeCursor(after),
         });
       }
-      locations = await qb
-        .take(first + 1)
-        .orderBy('location.id', 'ASC')
-        .getMany();
+      [locations, totalCount] = await Promise.all([
+        qb
+          .take(first + 1)
+          .orderBy('location.id', 'ASC')
+          .getMany(),
+        qb2.getCount(),
+      ]);
       if (locations.length > first) {
         hasNextPage = true;
         locations.pop();
@@ -97,10 +105,13 @@ export class LocationService {
           before, // before: decodeCursor(before),
         });
       }
-      locations = await qb
-        .take(last + 1)
-        .orderBy('location.id', 'DESC')
-        .getMany();
+      [locations, totalCount] = await Promise.all([
+        qb
+          .take(last + 1)
+          .orderBy('location.id', 'DESC')
+          .getMany(),
+        qb2.getCount(),
+      ]);
       if (locations.length > last) {
         hasPreviousPage = true;
         locations.pop();
