@@ -48,7 +48,6 @@ export class User {
   })
   status: UserStatus;
 
-  @Field({ nullable: true })
   @CreatedAt({ name: 'created_at' })
   createdAt: Date;
 
