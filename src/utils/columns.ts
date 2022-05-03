@@ -5,7 +5,10 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { WithWidthColumnType } from 'typeorm/driver/types/ColumnTypes';
+import {
+  WithPrecisionColumnType,
+  WithWidthColumnType,
+} from 'typeorm/driver/types/ColumnTypes';
 
 export const PrimaryKeyColumn = (options?: { name?: string }) =>
   PrimaryColumn({
@@ -48,22 +51,23 @@ export const ColumnDateTime = (options?: { name?: string }) =>
   Column({
     type: 'datetime',
     nullable: true,
-    // precision: 0, // for MariaDB
     name: options?.name,
   });
 
-export const ColumnDecimal = (
-  options: { precision?: number; scale?: number; name?: string } = {
-    precision: 255,
-    scale: 2,
-  },
-) =>
+export const ColumnDecimal = (options?: {
+  type?: WithPrecisionColumnType;
+  default?: number;
+  precision?: number;
+  scale?: number;
+  name?: string;
+}) =>
   Column({
-    type: 'double',
+    type: options?.type || 'decimal',
     nullable: true,
-    precision: options.precision, // max: 255
-    scale: options.scale, // max: 30
-    name: options.name,
+    default: options?.default,
+    precision: options?.precision,
+    scale: options?.scale,
+    name: options?.name,
   });
 
 export const ColumnEnum = (options: {
@@ -173,34 +177,43 @@ export const ColumnVarChar = (
   });
 
 export const CreatedAt = (
-  options: { select?: boolean; name?: string } = { select: false },
+  options: {
+    type?: WithPrecisionColumnType;
+    select?: boolean;
+    name?: string;
+  } = { type: 'datetime', select: false },
 ) =>
   CreateDateColumn({
-    type: 'datetime',
+    type: options.type,
     nullable: true,
-    // precision: 0, // for MariaDB
     select: options.select,
     name: options.name,
   });
 
 export const UpdatedAt = (
-  options: { select?: boolean; name?: string } = { select: false },
+  options: {
+    type?: WithPrecisionColumnType;
+    select?: boolean;
+    name?: string;
+  } = { type: 'datetime', select: false },
 ) =>
   UpdateDateColumn({
-    type: 'datetime',
+    type: options.type,
     nullable: true,
-    // precision: 0, // for MariaDB
     select: options.select,
     name: options.name,
   });
 
 export const DeletedAt = (
-  options: { select?: boolean; name?: string } = { select: false },
+  options: {
+    type?: WithPrecisionColumnType;
+    select?: boolean;
+    name?: string;
+  } = { type: 'datetime', select: false },
 ) =>
   DeleteDateColumn({
-    type: 'datetime',
+    type: options.type,
     nullable: true,
-    // precision: 0, // for MariaDB
     select: options.select,
     name: options.name,
   });
