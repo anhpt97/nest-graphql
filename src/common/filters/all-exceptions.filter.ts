@@ -1,4 +1,9 @@
-import { ArgumentsHost, Catch, HttpStatus } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  Catch,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import {
   GqlArgumentsHost,
   GqlContextType,
@@ -62,12 +67,17 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
       sentry.captureException(exception);
     }
 
-    if (NODE_ENV !== NodeEnv.PRODUCTION) {
+    if (NODE_ENV === NodeEnv.PRODUCTION) {
+      res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+      return;
+    }
+
+    if (exception instanceof HttpException) {
+      res.status(exception.getStatus()).json(exception.getResponse());
+    } else {
       res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ message: exception.message, ...exception });
-    } else {
-      res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
