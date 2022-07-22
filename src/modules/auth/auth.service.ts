@@ -38,6 +38,9 @@ export class AuthService {
 
   async refreshToken(refreshToken: string) {
     const payload: IUser = await this.tokenService.verifyToken(refreshToken);
+    if (!payload?.id) {
+      throw new UnauthorizedException(ErrorMessage.INVALID_TOKEN);
+    }
     const user = await this.userRepository.findOneBy({ id: payload.id });
     this.validateUser(user);
     void this.tokenService.deleteToken(refreshToken);
