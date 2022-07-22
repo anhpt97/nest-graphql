@@ -9,7 +9,7 @@ import { UserRepository } from '~/repositories';
 
 @Injectable()
 export class MeService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private userRepository: UserRepository) {}
 
   async whoAmI(userId: string) {
     const user = await this.userRepository.findOne({ id: userId });

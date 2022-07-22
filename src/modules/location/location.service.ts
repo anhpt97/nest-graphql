@@ -14,7 +14,7 @@ import { LocationConnection, PaginatedLocation } from './location.model';
 
 @Injectable()
 export class LocationService {
-  constructor(private readonly locationRepository: LocationRepository) {}
+  constructor(private locationRepository: LocationRepository) {}
 
   async getOne(id: string): Promise<Location> {
     const location = await this.locationRepository.findOne({ id });

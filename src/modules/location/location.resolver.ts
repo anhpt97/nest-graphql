@@ -21,7 +21,7 @@ import { LocationService } from './location.service';
 @UseGuards(GqlAuthGuard)
 @Resolver(() => Location)
 export class LocationResolver {
-  constructor(private readonly locationService: LocationService) {}
+  constructor(private locationService: LocationService) {}
 
   @Query(() => Location)
   location(@Args('id') id: string): Promise<Location> {

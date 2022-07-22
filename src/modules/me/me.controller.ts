@@ -11,7 +11,7 @@ import { MeService } from './me.service';
 @UseGuards(JwtAuthGuard)
 @Controller('me')
 export class MeController {
-  constructor(private readonly meService: MeService) {}
+  constructor(private meService: MeService) {}
 
   @Get()
   whoAmI(@CurrentUser() user: IUser) {

@@ -15,8 +15,8 @@ import { TokenService } from './token.service';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: UserRepository,
-    private readonly tokenService: TokenService,
+    private userRepository: UserRepository,
+    private tokenService: TokenService,
   ) {}
 
   async login(username: string, password: string) {

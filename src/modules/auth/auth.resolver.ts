@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
 
 @Resolver()
 export class AuthResolver {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
   @UseGuards(GqlAuthGuard)
   @Subscription(() => User, {
