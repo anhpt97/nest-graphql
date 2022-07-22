@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  RequestMethod,
-  ValidationError,
-  ValidationPipe,
-} from '@nestjs/common';
+import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import 'dotenv/config';
@@ -27,36 +22,6 @@ const bootstrap = async () => {
     new ValidationPipe({
       transform: true,
       // whitelist: true,
-      exceptionFactory: (errors: ValidationError[]) => {
-        const messages = [];
-        for (const error of errors) {
-          if (error.constraints) {
-            messages.push({
-              field: error.property,
-              message: Object.values(error.constraints).join('; '),
-            });
-          } else {
-            for (const childError of error.children) {
-              if (childError.constraints) {
-                messages.push({
-                  field: error.property,
-                  message: Object.values(childError.constraints).join('; '),
-                });
-              } else {
-                for (const grandChildError of childError.children) {
-                  messages.push({
-                    field: grandChildError.property,
-                    message: Object.values(grandChildError.constraints).join(
-                      '; ',
-                    ),
-                  });
-                }
-              }
-            }
-          }
-        }
-        throw new BadRequestException(messages);
-      },
     }),
   );
 
@@ -69,6 +34,6 @@ const bootstrap = async () => {
     SwaggerModule.setup('api-docs', app, document);
   }
 
-  await app.listen(PORT);
+  void app.listen(PORT);
 };
 void bootstrap();

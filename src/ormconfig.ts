@@ -23,10 +23,5 @@ const ormconfig: TypeOrmModuleOptions = {
   logger: [NodeEnv.DEVELOPMENT, NodeEnv.PRODUCTION].includes(NODE_ENV)
     ? 'simple-console'
     : 'advanced-console',
-  migrationsTableName: 'migration',
-  migrations: [__dirname + '/migrations/*{.ts,.js}'],
-  cli: {
-    migrationsDir: __dirname + '/migrations',
-  },
 };
 export default ormconfig;
