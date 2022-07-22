@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'crypto';
 import { REFRESH_TOKEN_TTL } from '~/common/constants';
@@ -28,15 +24,11 @@ export class TokenService {
   }
 
   async verifyToken(refreshToken: string) {
-    try {
-      const accessToken = await this.redisService.get(refreshToken);
-      if (!accessToken) {
-        throw new NotFoundException(ErrorMessage.TOKEN_NOT_FOUND);
-      }
-      return this.jwtService.verify(accessToken, { ignoreExpiration: true });
-    } catch (error) {
-      throw new UnauthorizedException(error);
+    const accessToken = await this.redisService.get(refreshToken);
+    if (!accessToken) {
+      throw new UnauthorizedException(ErrorMessage.TOKEN_NOT_FOUND);
     }
+    return this.jwtService.verify(null, { ignoreExpiration: true });
   }
 
   deleteToken(refreshToken: string) {
