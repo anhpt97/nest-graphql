@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer';
 
-export const TransformIntoArrayOfNumbers = () =>
+export const ConvertToArrayOfNumbers = () =>
   Transform((params) => {
     const values = params.value;
     if (!values) {
@@ -11,7 +11,7 @@ export const TransformIntoArrayOfNumbers = () =>
     );
   });
 
-export const TransformIntoBoolean = () =>
+export const ConvertToBoolean = () =>
   Transform(({ value }) => {
     if (value === 'true') {
       return true;
@@ -21,8 +21,7 @@ export const TransformIntoBoolean = () =>
     }
   });
 
-export const TransformIntoNumber = () =>
-  Transform(({ value }) => Number(value));
+export const ConvertToNumber = () => Transform(({ value }) => Number(value));
 
 export const Trim = () =>
   Transform(({ value }) => {
