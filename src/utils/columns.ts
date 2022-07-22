@@ -2,7 +2,7 @@ import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import {
@@ -11,7 +11,7 @@ import {
 } from 'typeorm/driver/types/ColumnTypes';
 
 export const PrimaryKeyColumn = (options?: { name?: string }) =>
-  PrimaryColumn({
+  PrimaryGeneratedColumn({
     type: 'bigint',
     unsigned: true,
     name: options?.name,
@@ -150,9 +150,7 @@ export const ColumnText = (options?: { name?: string }) =>
     name: options?.name,
   });
 
-export const ColumnUuid = (
-  options: { select?: boolean; name?: string } = { select: true },
-) =>
+export const ColumnUuid = (options: { select?: boolean; name?: string }) =>
   Column({
     type: 'varchar',
     generated: 'uuid',
@@ -163,10 +161,7 @@ export const ColumnUuid = (
   });
 
 export const ColumnVarChar = (
-  options: { length?: number; select?: boolean; name?: string } = {
-    length: 255,
-    select: true,
-  },
+  options: { length?: number; select?: boolean; name?: string } = {},
 ) =>
   Column({
     type: 'varchar',
@@ -176,44 +171,38 @@ export const ColumnVarChar = (
     name: options.name,
   });
 
-export const CreatedAt = (
-  options: {
-    type?: WithPrecisionColumnType;
-    select?: boolean;
-    name?: string;
-  } = { type: 'datetime', select: false },
-) =>
+export const CreatedAt = (options: {
+  type?: WithPrecisionColumnType;
+  select?: boolean;
+  name?: string;
+}) =>
   CreateDateColumn({
-    type: options.type,
+    type: options.type || 'datetime',
     nullable: true,
-    select: options.select,
+    select: options.select || false,
     name: options.name,
   });
 
-export const UpdatedAt = (
-  options: {
-    type?: WithPrecisionColumnType;
-    select?: boolean;
-    name?: string;
-  } = { type: 'datetime', select: false },
-) =>
+export const UpdatedAt = (options: {
+  type?: WithPrecisionColumnType;
+  select?: boolean;
+  name?: string;
+}) =>
   UpdateDateColumn({
-    type: options.type,
+    type: options.type || 'datetime',
     nullable: true,
-    select: options.select,
+    select: options.select || false,
     name: options.name,
   });
 
-export const DeletedAt = (
-  options: {
-    type?: WithPrecisionColumnType;
-    select?: boolean;
-    name?: string;
-  } = { type: 'datetime', select: false },
-) =>
+export const DeletedAt = (options: {
+  type?: WithPrecisionColumnType;
+  select?: boolean;
+  name?: string;
+}) =>
   DeleteDateColumn({
-    type: options.type,
+    type: options.type || 'datetime',
     nullable: true,
-    select: options.select,
+    select: options.select || false,
     name: options.name,
   });

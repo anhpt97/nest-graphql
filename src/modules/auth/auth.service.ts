@@ -5,27 +5,28 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
 import { ErrorMessage, UserStatus } from '~/common/enums';
 import { IUser } from '~/common/interfaces';
 import { User } from '~/entities';
-import { UserRepository } from '~/repositories';
 import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userRepository: UserRepository,
+    @InjectRepository(User) private userRepository: Repository<User>,
     private tokenService: TokenService,
   ) {}
 
   async login(username: string, password: string) {
     const user = await this.userRepository.findOne({
-      select: ['id', 'username', 'passwordHash', 'role', 'status'],
+      select: ['id', 'username', 'hashedPassword', 'role', 'status'],
       where: [{ username }, { email: username }],
     });
     this.validateUser(user);
-    if (!bcrypt.compareSync(password, user.passwordHash)) {
+    if (!bcrypt.compareSync(password, user.hashedPassword)) {
       throw new BadRequestException(ErrorMessage.INVALID_PASSWORD);
     }
     return this.tokenService.createToken({
@@ -40,7 +41,7 @@ export class AuthService {
     if (!payload) {
       throw new BadRequestException(ErrorMessage.INVALID_PAYLOAD);
     }
-    const user = await this.userRepository.findOne({ id: payload.id });
+    const user = await this.userRepository.findOneBy({ id: payload.id });
     this.validateUser(user);
     void this.tokenService.deleteToken(refreshToken);
     return this.tokenService.createToken({
@@ -50,7 +51,7 @@ export class AuthService {
     });
   }
 
-  private validateUser(user: User) {
+  validateUser(user: User) {
     if (!user) {
       throw new NotFoundException(ErrorMessage.USER_NOT_FOUND);
     }

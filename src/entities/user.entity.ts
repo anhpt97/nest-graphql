@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BeforeInsert, Entity, Index } from 'typeorm';
 import { UserRole, UserStatus } from '~/common/enums';
 import { generateId } from '~/common/graphql/utils';
@@ -22,29 +23,39 @@ export class User {
     length: 32,
   })
   @Index('username', { unique: true })
+  @ApiProperty({ example: 'superadmin' })
   username: string;
 
   @Field({ nullable: true })
   @ColumnVarChar()
   @Index('email', { unique: true })
+  @ApiPropertyOptional({ example: null })
   email: string;
 
   @ColumnVarChar({
     length: 64,
     select: false,
-    name: 'password_hash',
+    name: 'hashed_password',
   })
-  passwordHash: string;
+  hashedPassword: string;
 
   @Field({ nullable: true })
   @ColumnEnum({
     enum: UserRole,
+  })
+  @ApiProperty({
+    enum: UserRole,
+    example: UserRole.ADMIN,
   })
   role: UserRole;
 
   @Field({ nullable: true })
   @ColumnEnum({
     enum: UserStatus,
+  })
+  @ApiProperty({
+    enum: UserStatus,
+    example: UserStatus.ACTIVE,
   })
   status: UserStatus;
 

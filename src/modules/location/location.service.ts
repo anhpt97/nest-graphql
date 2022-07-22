@@ -3,21 +3,25 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { QueryError } from 'mysql2';
+import { Repository } from 'typeorm';
 import { ConnectionArgs } from '~/common/dto';
 import { ErrorMessage } from '~/common/enums';
 import { Location } from '~/entities';
-import { LocationRepository } from '~/repositories';
 import { paginate } from '~/utils';
 import { LocationArgs, LocationInput } from './location.dto';
 import { LocationConnection, PaginatedLocation } from './location.model';
 
 @Injectable()
 export class LocationService {
-  constructor(private locationRepository: LocationRepository) {}
+  constructor(
+    @InjectRepository(Location)
+    private locationRepository: Repository<Location>,
+  ) {}
 
   async getOne(id: string): Promise<Location> {
-    const location = await this.locationRepository.findOne({ id });
+    const location = await this.locationRepository.findOneBy({ id });
     if (!location) {
       throw new NotFoundException(ErrorMessage.LOCATION_NOT_FOUND);
     }
@@ -152,7 +156,7 @@ export class LocationService {
 
   async update(id: string, input: LocationInput): Promise<Location> {
     try {
-      const location = await this.locationRepository.findOne({ id });
+      const location = await this.locationRepository.findOneBy({ id });
       if (!location) {
         throw new NotFoundException(ErrorMessage.LOCATION_NOT_FOUND);
       }
@@ -163,7 +167,7 @@ export class LocationService {
   }
 
   async delete(id: string): Promise<boolean> {
-    const location = await this.locationRepository.findOne({ id });
+    const location = await this.locationRepository.findOneBy({ id });
     if (!location) {
       throw new NotFoundException(ErrorMessage.LOCATION_NOT_FOUND);
     }
