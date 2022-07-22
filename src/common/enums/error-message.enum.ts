@@ -3,8 +3,6 @@ export enum ErrorMessage {
   EXPIRED_TOKEN = 'Token has expired',
   INVALID_NEW_PASSWORD = 'The new password must be different from the current password',
   INVALID_PASSWORD = 'Invalid password',
-  INVALID_PAYLOAD = 'Invalid payload',
-  INVALID_REFRESH_TOKEN = 'Invalid refresh token',
   LOCATION_COORDINATES_ALREADY_EXIST = 'Location coordinates already exist',
   LOCATION_NAME_ALREADY_EXISTS = 'Location name already exists',
   LOCATION_NOT_FOUND = 'Location not found',

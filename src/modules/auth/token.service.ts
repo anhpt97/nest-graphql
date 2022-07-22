@@ -1,8 +1,7 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'crypto';
 import { REFRESH_TOKEN_TTL } from '~/common/constants';
-import { ErrorMessage } from '~/common/enums';
 import { IUser } from '~/common/interfaces';
 import { RedisService } from '../redis/redis.service';
 
@@ -23,15 +22,12 @@ export class TokenService {
     return { accessToken, refreshToken };
   }
 
-  async decodeToken(refreshToken: string) {
-    const accessToken = await this.redisService.get(refreshToken);
-    if (!accessToken) {
-      throw new BadRequestException(ErrorMessage.INVALID_REFRESH_TOKEN);
-    }
+  async verifyToken(refreshToken: string) {
     try {
+      const accessToken = await this.redisService.get(refreshToken);
       return this.jwtService.verify(accessToken, { ignoreExpiration: true });
     } catch (error) {
-      throw new BadRequestException(error);
+      throw new UnauthorizedException(error);
     }
   }
 

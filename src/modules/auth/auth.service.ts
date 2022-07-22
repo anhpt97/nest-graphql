@@ -37,10 +37,7 @@ export class AuthService {
   }
 
   async refreshToken(refreshToken: string) {
-    const payload: IUser = await this.tokenService.decodeToken(refreshToken);
-    if (!payload) {
-      throw new BadRequestException(ErrorMessage.INVALID_PAYLOAD);
-    }
+    const payload: IUser = await this.tokenService.verifyToken(refreshToken);
     const user = await this.userRepository.findOneBy({ id: payload.id });
     this.validateUser(user);
     void this.tokenService.deleteToken(refreshToken);
