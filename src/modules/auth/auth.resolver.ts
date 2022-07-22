@@ -5,7 +5,7 @@ import { pubSub } from '~/common/graphql/utils';
 import { GqlAuthGuard } from '~/common/guards';
 import { User } from '~/entities';
 import { LoginInput } from './auth.dto';
-import { Tokens } from './auth.model';
+import { LoginResponse } from './auth.model';
 import { AuthService } from './auth.service';
 
 @Resolver()
@@ -21,7 +21,7 @@ export class AuthResolver {
     return pubSub.asyncIterator(Topic.USER_ADDED);
   }
 
-  @Mutation(() => Tokens)
+  @Mutation(() => LoginResponse)
   login(@Args('input') input: LoginInput) {
     const { username, password } = input;
     return this.authService.login(username, password);
