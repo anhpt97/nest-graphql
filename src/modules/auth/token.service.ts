@@ -28,7 +28,13 @@ export class TokenService {
     if (!accessToken) {
       throw new UnauthorizedException(ErrorMessage.TOKEN_NOT_FOUND);
     }
-    return this.jwtService.verify(null, { ignoreExpiration: true });
+    try {
+      return this.jwtService.verify(accessToken, {
+        ignoreExpiration: true,
+      });
+    } catch (error) {
+      throw new UnauthorizedException(error);
+    }
   }
 
   deleteToken(refreshToken: string) {
