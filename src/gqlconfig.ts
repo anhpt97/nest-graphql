@@ -1,10 +1,12 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { HttpStatus } from '@nestjs/common';
 import {
   ApolloServerPluginLandingPageDisabled,
   ApolloServerPluginLandingPageLocalDefault,
 } from 'apollo-server-core';
 import { GraphQLError } from 'graphql';
 import { IncomingHttpHeaders } from 'http';
+import _ from 'lodash';
 import { NODE_ENV } from './common/constants';
 import { ErrorMessage, NodeEnv } from './common/enums';
 import { ComplexityPlugin } from './common/graphql/plugins';
@@ -37,6 +39,22 @@ const gqlconfig: ApolloDriverConfig = {
     new ComplexityPlugin(100),
   ],
   formatError: (error: GraphQLError) => {
+    if (Number(error.extensions.code) === HttpStatus.NOT_FOUND) {
+      error.extensions.code = 'NOT_FOUND';
+    }
+    const { response }: any = error.extensions;
+    if (Array.isArray(response.message)) {
+      const messages: string[] = response.message;
+      const fields = _.uniq(messages.map((message) => message.split(' ')[0]));
+      response.error = fields.map((field) => ({
+        field,
+        message: messages
+          .filter((message) => message.startsWith(field))
+          .join('; '),
+      }));
+      response.message = undefined;
+      error.extensions.message = 'Invalid argument value';
+    }
     if (NODE_ENV === NodeEnv.PRODUCTION) {
       delete error.extensions.exception;
     }
