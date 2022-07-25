@@ -1,4 +1,3 @@
-import { Field, InputType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { Trim } from '~/utils';
@@ -21,16 +20,4 @@ export class RefreshTokenBody {
   @IsNotEmpty()
   @ApiProperty({ example: '' })
   refreshToken: string;
-}
-
-@InputType()
-export class LoginInput {
-  @Field()
-  @IsNotEmpty()
-  @Trim()
-  username: string;
-
-  @Field()
-  @IsNotEmpty()
-  password: string;
 }

@@ -10,7 +10,7 @@ import {
 import { ConnectionArgs } from '~/common/dto';
 import { GqlAuthGuard } from '~/common/guards';
 import { Location } from '~/entities';
-import { LocationArgs, LocationInput } from './location.dto';
+import { LocationArgs, LocationInput } from './location.args';
 import {
   Coordinates,
   LocationConnection,

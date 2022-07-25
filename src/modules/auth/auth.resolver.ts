@@ -4,7 +4,7 @@ import { Topic } from '~/common/enums';
 import { pubSub } from '~/common/graphql/utils';
 import { GqlAuthGuard } from '~/common/guards';
 import { User } from '~/entities';
-import { LoginInput } from './auth.dto';
+import { LoginInput } from './auth.args';
 import { LoginResponse } from './auth.model';
 import { AuthService } from './auth.service';
 

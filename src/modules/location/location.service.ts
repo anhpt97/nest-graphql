@@ -10,7 +10,7 @@ import { ConnectionArgs } from '~/common/dto';
 import { ErrorMessage } from '~/common/enums';
 import { Location } from '~/entities';
 import { paginate } from '~/utils';
-import { LocationArgs, LocationInput } from './location.dto';
+import { LocationArgs, LocationInput } from './location.args';
 import { LocationConnection, PaginatedLocation } from './location.model';
 
 @Injectable()
