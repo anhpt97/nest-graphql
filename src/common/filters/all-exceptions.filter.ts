@@ -16,6 +16,11 @@ import _ from 'lodash';
 import { NODE_ENV, SENTRY_DSN } from '../constants';
 import { NodeEnv } from '../enums';
 
+interface UserInputError {
+  field: string;
+  message: string;
+}
+
 @Catch()
 export class AllExceptionsFilter implements GqlExceptionFilter {
   constructor() {
@@ -77,7 +82,7 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
             message: messages
               .filter((message) => message.startsWith(field))
               .join('; '),
-          })),
+          })) as UserInputError[],
         });
         return;
       }

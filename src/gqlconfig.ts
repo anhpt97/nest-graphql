@@ -39,9 +39,6 @@ const gqlconfig: ApolloDriverConfig = {
     new ComplexityPlugin(100),
   ],
   formatError: (error: GraphQLError) => {
-    if (Number(error.extensions.code) === HttpStatus.NOT_FOUND) {
-      error.extensions.code = 'NOT_FOUND';
-    }
     const { response }: any = error.extensions;
     if (Array.isArray(response.message)) {
       const messages: string[] = response.message;
@@ -53,7 +50,10 @@ const gqlconfig: ApolloDriverConfig = {
           .join('; '),
       }));
       response.message = undefined;
-      error.extensions.message = 'Invalid argument value';
+      error.message = 'Invalid argument value';
+    }
+    if (Number(error.extensions.code) === HttpStatus.NOT_FOUND) {
+      error.extensions.code = HttpStatus[HttpStatus.NOT_FOUND];
     }
     if (NODE_ENV === NodeEnv.PRODUCTION) {
       delete error.extensions.exception;
