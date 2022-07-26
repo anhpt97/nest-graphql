@@ -46,12 +46,7 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
       }
 
       if (response && Array.isArray(response.message)) {
-        const message: string[] = response.message;
-        const fields = _.uniq(message.map((msg) => msg.split(' ')[0]));
-        response.error = fields.map((field) => ({
-          field,
-          message: message.filter((msg) => msg.startsWith(field)).join('; '),
-        }));
+        response.error = this.exceptionFactory(response.message);
         response.message = ErrorMessage.INVALID_ARGUMENT_VALUE;
         exception.message = ErrorMessage.INVALID_ARGUMENT_VALUE;
       }
@@ -85,13 +80,9 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
     if (exception instanceof HttpException) {
       const { message }: any = exception.getResponse();
       if (Array.isArray(message)) {
-        const fields = _.uniq(message.map((msg) => msg.split(' ')[0]));
         res.status(exception.getStatus()).json({
           statusCode: exception.getStatus(),
-          error: fields.map((field) => ({
-            field,
-            message: message.filter((msg) => msg.startsWith(field)).join('; '),
-          })),
+          error: this.exceptionFactory(message),
         });
         return;
       }
@@ -101,5 +92,18 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
     res
       .status(HttpStatus.INTERNAL_SERVER_ERROR)
       .json({ message: exception.message, ...exception });
+  }
+
+  exceptionFactory(messages: string[]): {
+    field: string;
+    message: string;
+  }[] {
+    const fields = _.uniq(messages.map((message) => message.split(' ')[0]));
+    return fields.map((field) => ({
+      field,
+      message: messages
+        .filter((message) => message.startsWith(field))
+        .join('; '),
+    }));
   }
 }
