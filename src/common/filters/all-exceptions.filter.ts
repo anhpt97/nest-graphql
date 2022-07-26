@@ -16,6 +16,8 @@ import _ from 'lodash';
 import { NODE_ENV, SENTRY_DSN } from '../constants';
 import { NodeEnv } from '../enums';
 
+const INVALID_ARGUMENT_VALUE = 'Invalid argument value';
+
 @Catch()
 export class AllExceptionsFilter implements GqlExceptionFilter {
   constructor() {
@@ -27,7 +29,12 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
 
   catch(exception: any, host: ArgumentsHost) {
     if (host.getType<GqlContextType>() === 'graphql') {
-      if ([NodeEnv.DEVELOPMENT, NodeEnv.PRODUCTION].includes(NODE_ENV)) {
+      const { response } = exception;
+
+      if (
+        !response &&
+        [(NodeEnv.DEVELOPMENT, NodeEnv.PRODUCTION)].includes(NODE_ENV)
+      ) {
         const ctx = GqlArgumentsHost.create(host).getContext<ExpressContext>();
         sentry.setExtras({
           authorization: ctx.req.headers.authorization,
@@ -38,6 +45,17 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
           variables: ctx.req.body.variables,
         });
         sentry.captureException(exception);
+      }
+
+      if (response && Array.isArray(response.message)) {
+        const message: string[] = response.message;
+        const fields = _.uniq(message.map((msg) => msg.split(' ')[0]));
+        response.error = fields.map((field) => ({
+          field,
+          message: message.filter((msg) => msg.startsWith(field)).join('; '),
+        }));
+        response.message = INVALID_ARGUMENT_VALUE;
+        exception.message = INVALID_ARGUMENT_VALUE;
       }
       return exception;
     }
