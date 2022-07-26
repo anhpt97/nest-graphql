@@ -16,11 +16,6 @@ import _ from 'lodash';
 import { NODE_ENV, SENTRY_DSN } from '../constants';
 import { NodeEnv } from '../enums';
 
-interface UserInputError {
-  field: string;
-  message: string;
-}
-
 @Catch()
 export class AllExceptionsFilter implements GqlExceptionFilter {
   constructor() {
@@ -72,17 +67,15 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
       return;
     }
     if (exception instanceof HttpException) {
-      const { message: messages }: any = exception.getResponse();
-      if (Array.isArray(messages)) {
-        const fields = _.uniq(messages.map((message) => message.split(' ')[0]));
+      const { message }: any = exception.getResponse();
+      if (Array.isArray(message)) {
+        const fields = _.uniq(message.map((msg) => msg.split(' ')[0]));
         res.status(exception.getStatus()).json({
-          statusCode: HttpStatus.BAD_REQUEST,
+          statusCode: exception.getStatus(),
           error: fields.map((field) => ({
             field,
-            message: messages
-              .filter((message) => message.startsWith(field))
-              .join('; '),
-          })) as UserInputError[],
+            message: message.filter((msg) => msg.startsWith(field)).join('; '),
+          })),
         });
         return;
       }
