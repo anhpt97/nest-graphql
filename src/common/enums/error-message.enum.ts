@@ -1,6 +1,7 @@
 export enum ErrorMessage {
   DISABLED_USER = 'Account has been disabled',
   EXPIRED_TOKEN = 'Token has expired',
+  INVALID_ARGUMENT_VALUE = 'Invalid argument value',
   INVALID_NEW_PASSWORD = 'The new password must be different from the current password',
   INVALID_PASSWORD = 'Invalid password',
   INVALID_TOKEN = 'Invalid token',

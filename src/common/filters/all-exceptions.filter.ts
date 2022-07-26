@@ -14,9 +14,7 @@ import { ExpressContext } from 'apollo-server-express';
 import { Request, Response } from 'express';
 import _ from 'lodash';
 import { NODE_ENV, SENTRY_DSN } from '../constants';
-import { NodeEnv } from '../enums';
-
-const INVALID_ARGUMENT_VALUE = 'Invalid argument value';
+import { ErrorMessage, NodeEnv } from '../enums';
 
 @Catch()
 export class AllExceptionsFilter implements GqlExceptionFilter {
@@ -54,8 +52,8 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
           field,
           message: message.filter((msg) => msg.startsWith(field)).join('; '),
         }));
-        response.message = INVALID_ARGUMENT_VALUE;
-        exception.message = INVALID_ARGUMENT_VALUE;
+        response.message = ErrorMessage.INVALID_ARGUMENT_VALUE;
+        exception.message = ErrorMessage.INVALID_ARGUMENT_VALUE;
       }
       return exception;
     }
