@@ -15,6 +15,7 @@ import { Request, Response } from 'express';
 import _ from 'lodash';
 import { NODE_ENV, SENTRY_DSN } from '../constants';
 import { ErrorMessage, NodeEnv } from '../enums';
+import { ValidationError } from '../interfaces';
 
 @Catch()
 export class AllExceptionsFilter implements GqlExceptionFilter {
@@ -46,7 +47,7 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
       }
 
       if (response && Array.isArray(response.message)) {
-        response.error = this.exceptionFactory(response.message);
+        response.error = this.validationResult(response.message);
         response.message = ErrorMessage.INVALID_ARGUMENT_VALUE;
         exception.message = ErrorMessage.INVALID_ARGUMENT_VALUE;
       }
@@ -82,7 +83,7 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
       if (Array.isArray(message)) {
         res.status(exception.getStatus()).json({
           statusCode: exception.getStatus(),
-          error: this.exceptionFactory(message),
+          error: this.validationResult(message),
         });
         return;
       }
@@ -94,10 +95,7 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
       .json({ message: exception.message, ...exception });
   }
 
-  exceptionFactory(messages: string[]): {
-    field: string;
-    message: string;
-  }[] {
+  validationResult(messages: string[]): ValidationError[] {
     const fields = _.uniq(messages.map((message) => message.split(' ')[0]));
     return fields.map((field) => ({
       field,
