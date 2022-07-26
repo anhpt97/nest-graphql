@@ -1,7 +1,6 @@
 import { ArgsType, Field, InputType } from '@nestjs/graphql';
 import { IsNotEmpty, IsOptional, IsUrl, Max, Min } from 'class-validator';
 import { PaginationArgs } from '~/common/dto';
-import { Trim } from '~/utils';
 
 @ArgsType()
 export class LocationArgs extends PaginationArgs {
@@ -13,14 +12,12 @@ export class LocationArgs extends PaginationArgs {
 export class LocationInput {
   @Field()
   @IsNotEmpty()
-  @Trim()
   name: string;
 
   @Field({ nullable: true })
   @IsOptional()
   @IsUrl()
   @IsNotEmpty()
-  @Trim()
   image: string;
 
   @Field()

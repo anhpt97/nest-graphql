@@ -22,13 +22,3 @@ export const ConvertToBoolean = () =>
   });
 
 export const ConvertToNumber = () => Transform(({ value }) => Number(value));
-
-export const Trim = () =>
-  Transform(({ value }) => {
-    if (typeof value === 'string') {
-      return value.trim() || null;
-    }
-    if (value === null) {
-      return null;
-    }
-  });
