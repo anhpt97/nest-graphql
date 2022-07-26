@@ -7,7 +7,7 @@ import { User } from '~/entities';
 import { AuthService } from '~/modules/auth/auth.service';
 import { JWT_SECRET } from '../constants';
 import { ErrorMessage } from '../enums';
-import { IUser } from '../interfaces';
+import { JwtClaims } from '../interfaces';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -22,7 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: IUser) {
+  async validate(payload: JwtClaims) {
     if (payload.exp * 1000 < Date.now()) {
       throw new UnauthorizedException(ErrorMessage.EXPIRED_TOKEN);
     }

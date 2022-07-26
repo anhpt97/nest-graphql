@@ -1,6 +1,6 @@
 import { UserRole } from '../enums';
 
-export interface IUser {
+export interface JwtClaims {
   id: string;
   username: string;
   role: UserRole;

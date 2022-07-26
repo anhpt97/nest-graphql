@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'crypto';
 import { REFRESH_TOKEN_TTL } from '~/common/constants';
 import { ErrorMessage } from '~/common/enums';
-import { IUser } from '~/common/interfaces';
+import { JwtClaims } from '~/common/interfaces';
 import { RedisService } from '../redis/redis.service';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class TokenService {
     private redisService: RedisService,
   ) {}
 
-  createToken(payload: IUser, getRefreshToken = true) {
+  createToken(payload: JwtClaims, getRefreshToken = true) {
     const accessToken = this.jwtService.sign(payload);
     if (!getRefreshToken) {
       return { accessToken };

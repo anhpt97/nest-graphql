@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { ErrorMessage, UserStatus } from '~/common/enums';
-import { IUser } from '~/common/interfaces';
+import { JwtClaims } from '~/common/interfaces';
 import { User } from '~/entities';
 import { TokenService } from './token.service';
 
@@ -37,7 +37,9 @@ export class AuthService {
   }
 
   async refreshToken(refreshToken: string) {
-    const payload: IUser = await this.tokenService.verifyToken(refreshToken);
+    const payload: JwtClaims = await this.tokenService.verifyToken(
+      refreshToken,
+    );
     if (!payload?.id) {
       throw new UnauthorizedException(ErrorMessage.INVALID_TOKEN);
     }

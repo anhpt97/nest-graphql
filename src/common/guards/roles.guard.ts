@@ -10,7 +10,7 @@ import { ExpressContext } from 'apollo-server-express';
 import { Request } from 'express';
 import { ROLES_KEY } from '../decorators';
 import { ErrorMessage, UserRole } from '../enums';
-import { IUser } from '../interfaces';
+import { JwtClaims } from '../interfaces';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -26,14 +26,14 @@ export class RolesGuard implements CanActivate {
     if (context.getType<GqlContextType>() === 'graphql') {
       const ctx =
         GqlExecutionContext.create(context).getContext<ExpressContext>();
-      if (!roles.includes((ctx.req.user as IUser).role)) {
+      if (!roles.includes((ctx.req.user as JwtClaims).role)) {
         throw new ForbiddenException(ErrorMessage.PERMISSION_DENIED);
       }
       return true;
     }
 
     const { user } = context.switchToHttp().getRequest<Request>();
-    if (!roles.includes((user as IUser).role)) {
+    if (!roles.includes((user as JwtClaims).role)) {
       throw new ForbiddenException(ErrorMessage.PERMISSION_DENIED);
     }
     return true;
