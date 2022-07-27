@@ -98,10 +98,11 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
   validationResult(messages: string[]): ValidationError[] {
     const fields = _.uniq(messages.map((message) => message.split(' ')[0]));
     return fields.map((field) => ({
-      field,
+      field: field.replace(/().(\d).()+/g, '$1[$2].$3'),
       message: messages
         .filter((message) => message.startsWith(field))
-        .join('; '),
+        .join('; ')
+        .replace(/().(\d).()+/g, '$1[$2].$3'),
     }));
   }
 }
