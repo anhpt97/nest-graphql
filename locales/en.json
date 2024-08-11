@@ -1,0 +1,21 @@
+{
+  "DISABLED_USER": "Account has been disabled",
+  "EXPIRED_TOKEN": "Token has expired",
+  "FILE_NOT_FOUND": "File not found",
+  "FILE_TOO_LARGE": "File too large",
+  "INCORRECT_PASSWORD": "Incorrect password",
+  "INTERNAL_SERVER_ERROR": "Internal Server Error",
+  "INVALID_ARGUMENT_VALUE": "Invalid argument value",
+  "INVALID_FILE_FORMAT": "Invalid file format",
+  "INVALID_INPUT": "Invalid input",
+  "INVALID_TOKEN": "Invalid token",
+  "LOCATION_COORDINATES_ALREADY_EXIST": "Location coordinates already exist",
+  "LOCATION_NAME_ALREADY_EXISTS": "Location name already exists",
+  "LOCATION_NOT_FOUND": "Location not found",
+  "MISSING_JWT_VALIDATION": "Missing JWT validation",
+  "NEW_PASSWORD_SAME_AS_CURRENT_PASSWORD": "New password is same as current password",
+  "PERMISSION_DENIED": "Permission denied",
+  "TOKEN_NOT_FOUND": "Token not found",
+  "UNACTIVATED_USER": "Account has not been activated",
+  "USER_NOT_FOUND": "User not found"
+}
